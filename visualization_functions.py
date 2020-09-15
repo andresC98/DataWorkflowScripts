@@ -9,9 +9,9 @@ def viz_kmeans_3DScatter(col_names, data, kmeansModel):
     t = fig.suptitle(col_names[0] + '-' + col_names[1] + '-' + col_names[2] , fontsize=14)
     ax = fig.add_subplot(111, projection='3d')
 
-    xs = list(data[:,0])
-    ys = list(data[:,1])
-    zs = list(data[:,3])
+    xs = list(data[0])
+    ys = list(data[1])
+    zs = list(data[2])
 
     ax.scatter(xs, ys, zs, s=50, alpha=0.6, edgecolors='w',c=kmeansModel.labels_.astype(float))
 
