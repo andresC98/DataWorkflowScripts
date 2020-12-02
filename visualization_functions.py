@@ -20,3 +20,50 @@ def viz_kmeans_3DScatter(col_names, data, kmeansModel):
     ax.set_zlabel(col_names[2])
 
     return
+
+def createMultiUserTemporalClusterEvolution(userlist, df, n_clusters,cluster_col , title = "Temporal User Cluster Evolution"):
+    '''
+    Plots temporal evolution of a list of users belonging to a dataframe
+    processed on a clustering algorithm for a given number of clusters.
+
+    "df": dataframe containing the data cols (user, date, pred_clusters) we want a temporal plot.
+    "userlist": list containing the names of the different users from a dataframe we want to plot.
+    "n_clusters": number of distinct clusters.
+    "cluster_col": name of the column storing the predicted clusters.
+
+    Note: max n_clusters: 9
+    Note: date column name is default to be named as "date_time".
+    '''
+    fig, ax= plt.subplots(figsize=(6,3))
+    y_ticks_arr = list()
+    clusters_list = list()
+    for n_cluster in range(n_clusters):
+        clusters_list.append("Cluster "+ str(n_cluster))
+        
+    color_list = ["green", "orange", "red", "cyan", "blue","yellow", "magenta", "black", "pink"]
+    for index, user_name in enumerate(userlist):
+        user_dataframe = df.where(df["user"]==user_name).dropna()
+        user_series = pd.Series(user_dataframe[cluster_col].values, index=user_dataframe["date_time"])
+        
+        for n_cluster in range(n_clusters):
+            s_cluster = user_series[user_series == n_cluster]
+            inxval = matplotlib.dates.date2num(s_cluster.index.to_pydatetime())
+            times= zip(inxval, np.ones(len(s_cluster)))
+            plt.broken_barh(list(times), (index,1), color=color_list[n_cluster])
+            
+        
+        y_ticks_arr.append(index)
+        index += 2
+    
+    ax.margins(0)    
+    ax.set_yticks(y_ticks_arr)
+    #ax.set_yticks([])
+    ax.set_yticklabels(userlist)
+    ax.xaxis.set_major_locator(matplotlib.dates.MonthLocator())
+    ax.xaxis.set_minor_locator(matplotlib.dates.DayLocator())
+    ax.legend(clusters_list, loc="upper left")
+    ax.set_title(title)
+    monthFmt = matplotlib.dates.DateFormatter("%b")
+    ax.xaxis.set_major_formatter(monthFmt)
+    plt.tight_layout()
+    plt.show()
