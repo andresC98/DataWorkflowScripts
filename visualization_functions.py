@@ -139,8 +139,7 @@ def plot_cluster_centers(df, title):
     # Data of the spider plot
     group_colname = df.columns.values[-1]
     groups = df[group_colname].values
-    print(groups)
-    print(group_colname)
+
     for i, group in enumerate(groups): 
         values = df.loc[i].drop(group_colname).values.flatten().tolist()
         values += values[:-1]
