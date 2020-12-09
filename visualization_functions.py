@@ -21,6 +21,32 @@ def viz_kmeans_3DScatter(col_names, data, kmeansModel):
 
     return
 
+def get_missing_plot(df, cols, title = "Dataset variables and percent missing"):
+
+    n_missing =  df[cols].isnull().sum()
+    percent_missing = n_missing * 100 / len(df)
+    
+    missing_value_df = pd.DataFrame({'column_name': cols,
+                                    'num_missing': n_missing,
+                                    'percent_missing': percent_missing})
+    
+    missing_value_df = missing_value_df.sort_values(by=['percent_missing'])
+    
+        
+    plt.figure(figsize=(16,6))
+    
+    ax = sns.barplot(x="column_name", y="percent_missing", data=missing_value_df,
+                        palette=sns.color_palette("flare", len(cols)))
+    
+    plt.xticks(rotation='vertical')
+
+    plt.title(title)
+    ax.grid(b=True, which='major', color='#d3d3d3', linewidth=1.0)
+    ax.grid(b=True, which='minor', color='#d3d3d3', linewidth=0.5)
+    #plt.show()
+
+    return
+
 def createMultiUserTemporalClusterEvolution(userlist, df, n_clusters,cluster_col , title = "Temporal User Cluster Evolution"):
     '''
     Plots temporal evolution of a list of users belonging to a dataframe
