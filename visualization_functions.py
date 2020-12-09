@@ -1,4 +1,17 @@
 import matplotlib.pyplot as plt
+from pandas.plotting import parallel_coordinates
+from sklearn import preprocessing
+import matplotlib
+import pandas as pd
+import numpy as np
+from math import pi
+
+"""
+Author: Andrés Carrillo López.
+
+Useful visualization functions coded and collected.
+Reusable functions, adaptable to many use cases.
+"""
 
 def viz_kmeans_3DScatter(col_names, data, kmeansModel):
     '''
@@ -22,7 +35,9 @@ def viz_kmeans_3DScatter(col_names, data, kmeansModel):
     return
 
 def get_missing_plot(df, cols, title = "Dataset variables and percent missing"):
-
+    '''
+    Plots barchart with pct. of missing values per column.
+    '''
     n_missing =  df[cols].isnull().sum()
     percent_missing = n_missing * 100 / len(df)
     
@@ -93,3 +108,44 @@ def createMultiUserTemporalClusterEvolution(userlist, df, n_clusters,cluster_col
     ax.xaxis.set_major_formatter(monthFmt)
     plt.tight_layout()
     plt.show()
+
+ 
+def plot_cluster_centers(df, title):
+    """
+    Given a normalized dataframe with the following structure:
+    (important cluster centre label in the last col)
+    < Col1, ..., ColN, ClusterCntr>
+    Plots radar plot of the N columns, categorized by a group.
+
+    Note: Suitable for plotting e.g. cluster centers, etc. for a 
+    reduced number of centers (from 2 to 8 to enhance clarification)
+    """
+    # Background of the spider plot
+    categories = list(df)[1:]
+    N = len(categories)
+    angles = [n / float(N) * 2 * pi for n in range(N)]
+    angles += angles[:-1]
+    plt.figure(figsize=(10, 10))
+    ax = plt.subplot(111, polar=True)
+    ax.set_theta_offset(pi / 2)
+    ax.set_theta_direction(-1)
+    plt.xticks(angles[:-1], categories)
+    ax.set_rlabel_position(0)
+    plt.yticks([-2,0,2], ["-2","0","2"], color="black", size=10)
+    plt.ylim(-2.5,2.5)
+    
+    c_list = ['r', 'g', 'b', 'c', 'm', 'y', 'tab:pink','lime']
+
+    # Data of the spider plot
+    group_colname = df.columns.values[-1]
+    groups = df[group_colname].values
+    print(groups)
+    print(group_colname)
+    for i, group in enumerate(groups): 
+        values = df.loc[i].drop(group_colname).values.flatten().tolist()
+        values += values[:-1]
+        ax.plot(angles, values, linewidth=1, linestyle='solid', label=group)
+        ax.fill(angles, values, c_list[i], alpha=0.2)
+
+    plt.title(title)
+    plt.legend(bbox_to_anchor=(0.1, 0.1), title=group_colname)
