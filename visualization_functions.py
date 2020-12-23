@@ -111,9 +111,9 @@ def createMultiUserTemporalClusterEvolution(userlist, df, n_clusters,cluster_col
     plt.show()
 
  
-def plot_cluster_centers_radarplot(df, title):
+def plot_cluster_centers_radarplot(df, title, pos_cluster_col):
     """
-    Given a normalized dataframe with the following structure:
+    Given a ==> normalized <== dataframe with the following structure:
     (important cluster centre label in the last col)
     < Col1, ..., ColN, ClusterCntr>
     Plots radar plot of the N columns, categorized by a group.
@@ -122,7 +122,7 @@ def plot_cluster_centers_radarplot(df, title):
     reduced number of centers (from 2 to 8 to enhance clarification)
     """
     # Background of the spider plot
-    categories = list(df)[1:]
+    categories = list(df)[1:] if pos_cluster_col=="first" else list(df)[:-1]
     N = len(categories)
     angles = [n / float(N) * 2 * pi for n in range(N)]
     angles += angles[:-1]
