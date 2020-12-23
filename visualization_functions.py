@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from pandas.plotting import parallel_coordinates
+import seaborn as sns
 from sklearn import preprocessing
 import matplotlib
 import pandas as pd
