@@ -110,7 +110,7 @@ def createMultiUserTemporalClusterEvolution(userlist, df, n_clusters,cluster_col
     plt.show()
 
  
-def plot_cluster_centers(df, title):
+def plot_cluster_centers_radarplot(df, title):
     """
     Given a normalized dataframe with the following structure:
     (important cluster centre label in the last col)
